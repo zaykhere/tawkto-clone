@@ -8,10 +8,10 @@
  
   
   let elem1Msgs = document.createElement("div");
-  elem1Msgs.classList.add('.msgs');
+  elem1Msgs.classList.add('msgs');
 
   let elem1Status = document.createElement("div");
-  elem1Status.classList.add('.status');
+  elem1Status.classList.add('status');
 
   elem1.appendChild(elem1Msgs);
   elem1.appendChild(elem1Status);
@@ -62,7 +62,7 @@
 	chatBox.classList.toggle('hide');
 	chatBubble.classList.toggle('chat-bubble-hover');
 })  
-  var socket = io();
+  var socket = io("http://localhost:3000");
 
   var chatBtn = document.querySelector('.chat-btn');
   var input = document.querySelector('.chat-input');
