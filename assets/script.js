@@ -62,7 +62,7 @@
 	chatBox.classList.toggle('hide');
 	chatBubble.classList.toggle('chat-bubble-hover');
 })  
-  var socket = io("http://localhost:3000");
+  var socket = io("http://localhost:3000/chat");
 
   var chatBtn = document.querySelector('.chat-btn');
   var input = document.querySelector('.chat-input');

@@ -51,7 +51,21 @@ io.on("connection", (socket) => {
   });
 });
 
+app.get("/generatescript", async (req, res) => {
+  const chatNsp = io.of("/chat");
+  chatNsp.on("connection", (socket) => {
+    console.log(`${socket.it} connected to chat namespace`);
+    /* chat namespace listeners here */
+    socket.on('chat-message', (msg) => {
+      io.emit('chat-message', msg);
+    })  
+  });
+
+ 
+});
+
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
   console.log(`listening on port: ${PORT}`);
 });
+
