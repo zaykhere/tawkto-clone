@@ -2,12 +2,12 @@ const express = require("express");
 const app = express();
 const http = require("http");
 const server = http.createServer(app);
-// const { Server } = require("socket.io");
-// const io = new Server(server);
 const cors = require("cors");
 const { Server } = require("socket.io");
 const dotenv = require("dotenv");
 const mongoose = require("mongoose");
+
+const ids = ["123"];
 
 app.use(cors());
 
@@ -20,10 +20,11 @@ const io = new Server(server, {
 
 app.use(express.json());
 
-app.use('/assets', express.static('assets'));
+app.use("/assets", express.static("assets"));
 dotenv.config({ path: "./config.env" });
 
-mongoose.connect(process.env.DB_URL)
+mongoose
+  .connect(process.env.DB_URL)
   .then(() => console.log("Connected to the database"))
   .catch((err) => console.log(err));
 
@@ -39,33 +40,16 @@ const userRoute = require("./routes/userRoute");
 app.use("/", scriptRoute);
 app.use("/api/user", userRoute);
 
-io.on("connection", (socket) => {
-  console.log("Connection established with socketd!!!");
-
-  socket.on('chat-message', (msg) => {
-    io.emit('chat-message', msg);
-  })  
-
-  socket.on('disconnect', () => {
-    console.log('user disconnected');
+ids.forEach((id) => {
+  let serve = io.of(`/${id}`);
+  serve.on("connection", (socket) => {
+    socket.on("chat-message", (msg) => {
+      serve.emit("chat-message", msg);
+    });
   });
-});
-
-app.get("/generatescript", async (req, res) => {
-  const chatNsp = io.of("/chat");
-  chatNsp.on("connection", (socket) => {
-    console.log(`${socket.it} connected to chat namespace`);
-    /* chat namespace listeners here */
-    socket.on('chat-message', (msg) => {
-      io.emit('chat-message', msg);
-    })  
-  });
-
- 
 });
 
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
   console.log(`listening on port: ${PORT}`);
 });
-

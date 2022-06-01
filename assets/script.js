@@ -62,7 +62,8 @@
 	chatBox.classList.toggle('hide');
 	chatBubble.classList.toggle('chat-bubble-hover');
 })  
-  var socket = io("http://localhost:3000/chat");
+ // var socket = io("http://localhost:3000");
+  var chatSocket = io("http://localhost:3000/123");
 
   var chatBtn = document.querySelector('.chat-btn');
   var input = document.querySelector('.chat-input');
@@ -72,7 +73,7 @@
     if (event.key === "Enter") {
         event.preventDefault();
         if (input.value) {
-      socket.emit('chat-message', input.value);
+      chatSocket.emit('chat-message', input.value);
       input.value = '';
     }
     }
@@ -81,12 +82,12 @@
   chatBtn.addEventListener('click', function(e) {
     e.preventDefault();
     if (input.value) {
-      socket.emit('chat-message', input.value);
+      chatSocket.emit('chat-message', input.value);
       input.value = '';
     }
   });
 
-  socket.on('chat-message', function(msg) {
+  chatSocket.on('chat-message', function(msg) {
     var item = document.createElement('div');
     item.classList.add('msg');
     item.textContent = msg;
