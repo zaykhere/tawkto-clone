@@ -24,6 +24,8 @@ app.use(cookieParser());
 app.use("/assets", express.static("assets"));
 dotenv.config({ path: "./config.env" });
 
+app.set("view engine", "ejs"); 
+
 mongoose
   .connect(process.env.DB_URL)
   .then(() => console.log("Connected to the database"))
