@@ -37,7 +37,7 @@ router.post("/register", async (req, res) => {
         ),
       };
       res.cookie("token", generateToken(user._id), options);
-      res.json({ success: true });
+      res.render("dashboard", {name: user.name});
     } catch (error) {
       console.log(error);
       res.json({ error: error.message });
@@ -62,9 +62,7 @@ router.post("/register", async (req, res) => {
             ),
           };
           res.cookie("token", generateToken(user._id), options);
-        res.json({
-          success: true
-        });
+          res.render("dashboard", {name: user.name});
       } else {
         res.status(401).json({ error: "Invalid email or password" });
       }
