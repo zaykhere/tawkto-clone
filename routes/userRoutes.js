@@ -73,6 +73,13 @@ router.post("/register", async (req, res) => {
     }
   });
 
+  //Logout
+  router.get("/logout", protect, async(req,res) => {
+    if(req.cookies.token)
+      res.clearCookie("token");
+    res.redirect("/signup");
+  })
+
   //Generate Key
   router.get("/genscript", protect, async(req,res) => {
     try {
@@ -81,29 +88,33 @@ router.post("/register", async (req, res) => {
 
       const dirPath = path.join(__dirname, `../userFiles`);
 
-      if (fs.existsSync(dirPath)) {
+      if (fs.existsSync(`${dirPath}/${apiKey}.js`)) {
         console.log("File exists already");
-        res.download(dirPath);
-        res.end();
+        console.log(`${dirPath}\\${apiKey}.js`);
+        const data = fs.readFileSync(`${dirPath}\\${apiKey}.js`, {encoding: 'utf-8', flag: 'r'});
+
+        res.json({
+          message: "Add this script tag in your html file",
+          scriptData: data
+        })
       }
 
       else {
 
       let file = fs.createWriteStream(`${dirPath}/${apiKey}.js` , {flags: 'w'});
 
-      file.write(`let div=document.createElement("div");let elem1=document.createElement("div");elem1.classList.add('chat-bubble');let elem1Msgs=document.createElement("div");elem1Msgs.classList.add('msgs');let elem1Status=document.createElement("div");elem1Status.classList.add('status');elem1.appendChild(elem1Msgs);elem1.appendChild(elem1Status);document.body.appendChild(elem1);let elem2=document.createElement("div");elem2.classList.add("chat-box","hide");document.body.appendChild(elem2);let elem2Messages=document.createElement("div");elem2Messages.classList.add('messages');elem2.appendChild(elem2Messages);let elem2Msg=document.createElement("div");elem2Msg.classList.add("msg");elem2Msg.textContent="Kathlyn : Hey! what's up?";elem2Messages.appendChild(elem2Msg);let elem3=document.createElement("div");elem3.classList.add('input-holder');elem2.appendChild(elem3);let elem3Control=document.createElement("div");elem3Control.classList.add("control");elem3.appendChild(elem3Control);let elem3Input=document.createElement("input");elem3Input.type="text";elem3Input.classList.add("chat-input");let elem3Button=document.createElement("button");elem3Button.textContent="Send";elem3Button.classList.add('chat-btn');elem3Control.appendChild(elem3Input);elem3Control.appendChild(elem3Button);var chatBubble=document.querySelector(".chat-bubble");var chatBox=document.querySelector('.chat-box');chatBubble.addEventListener("click",function(e){chatBox.classList.toggle('hide');chatBubble.classList.toggle('chat-bubble-hover')})
+      file.write(`<script>\nlet div=document.createElement("div");let elem1=document.createElement("div");elem1.classList.add('chat-bubble');let elem1Msgs=document.createElement("div");elem1Msgs.classList.add('msgs');let elem1Status=document.createElement("div");elem1Status.classList.add('status');elem1.appendChild(elem1Msgs);elem1.appendChild(elem1Status);document.body.appendChild(elem1);let elem2=document.createElement("div");elem2.classList.add("chat-box","hide");document.body.appendChild(elem2);let elem2Messages=document.createElement("div");elem2Messages.classList.add('messages');elem2.appendChild(elem2Messages);let elem2Msg=document.createElement("div");elem2Msg.classList.add("msg");elem2Msg.textContent="Kathlyn : Hey! what's up?";elem2Messages.appendChild(elem2Msg);let elem3=document.createElement("div");elem3.classList.add('input-holder');elem2.appendChild(elem3);let elem3Control=document.createElement("div");elem3Control.classList.add("control");elem3.appendChild(elem3Control);let elem3Input=document.createElement("input");elem3Input.type="text";elem3Input.classList.add("chat-input");let elem3Button=document.createElement("button");elem3Button.textContent="Send";elem3Button.classList.add('chat-btn');elem3Control.appendChild(elem3Input);elem3Control.appendChild(elem3Button);var chatBubble=document.querySelector(".chat-bubble");var chatBox=document.querySelector('.chat-box');chatBubble.addEventListener("click",function(e){chatBox.classList.toggle('hide');chatBubble.classList.toggle('chat-bubble-hover')})
       var chatSocket=io("http://localhost:3000/dynamic-${apiKey}");var chatBtn=document.querySelector('.chat-btn');var input=document.querySelector('.chat-input');var messages=document.querySelector(".messages");input.addEventListener("keypress",function(event){if(event.key==="Enter"){event.preventDefault();if(input.value){chatSocket.emit('chat-message',input.value);input.value=''}}})
-      chatBtn.addEventListener('click',function(e){e.preventDefault();if(input.value){chatSocket.emit('chat-message',input.value);input.value=''}});chatSocket.on('chat-message',function(msg){var item=document.createElement('div');item.classList.add('msg');item.textContent=msg;messages.appendChild(item);window.scrollTo(0,document.body.scrollHeight)})`)
+      chatBtn.addEventListener('click',function(e){e.preventDefault();if(input.value){chatSocket.emit('chat-message',input.value);input.value=''}});chatSocket.on('chat-message',function(msg){var item=document.createElement('div');item.classList.add('msg');item.textContent=msg;messages.appendChild(item);window.scrollTo(0,document.body.scrollHeight)}) \n</script>`)
       
       file.end();
 
-      let scriptFile = `${dirPath}/${apiKey}.js` ;
+      const data = fs.readFileSync(`${dirPath}\\${apiKey}.js`, {encoding: 'utf-8', flag: 'r'});
 
-      res.download(scriptFile);
-
-      res.json({
-        message: "Add this script file in your html",
-      })
+        res.json({
+          message: "Add this script tag in your html file",
+          scriptData: data
+        })
 
     }
 

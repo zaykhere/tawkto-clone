@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tawkz</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css"
+      integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+    <div class="m-4 p-4">
+        <h2> Your Dashboard</h2>
+        <a href="/api/user/logout" class="btn btn-warning logout-btn" style="float: right;"> Logout </a>
+        <h4> Welcome, <%=name %> </h4>
+        
+
+        <h3 class="m-4"> Want to generate your script? Click below button..... </h3>
+        <a class="btn btn-info gen-script-btn"> Generate Script </a>
+
+        <div id="result-area" class="m-4">
+            <h3 class="msg-area"> </h3>
+            <p>
+                <code class="script-area">
+                </code>
+            </p>
+        </div>
+    </div>
+  </body>
+
+  <script>
+    const genScriptBtn = document.querySelector(".gen-script-btn");
+    const msgArea = document.querySelector(".msg-area");
+    const scriptArea = document.querySelector(".script-area");
+
+    genScriptBtn.addEventListener("click", function(e){
+        const url = `http://localhost:3000/api/user/genscript`;
+        fetch(url)
+            .then((res) => res.json())
+            .then((data) => {
+                msgArea.textContent = data.message;
+                scriptArea.textContent = data.scriptData;
+            })
+            .catch((err) => console.log(err))
+    })
+
+</script>
+
+</html>

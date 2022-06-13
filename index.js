@@ -19,6 +19,7 @@ const io = new Server(server, {
 });
 
 app.use(express.json());
+app.use(express.urlencoded({extended: false}));
 app.use(cookieParser());
 
 app.use("/assets", express.static("assets"));
@@ -56,9 +57,11 @@ app.get("/", (req, res) => {
 
 //Import Routes
 const userRoute = require("./routes/userRoutes");
+const rootRoute = require("./routes/rootRoutes");
 
 //Use those routes
 app.use("/api/user", userRoute);
+app.use("/", rootRoute);
 
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
