@@ -63,7 +63,7 @@
 	chatBubble.classList.toggle('chat-bubble-hover');
 })  
  // var socket = io("http://localhost:3000");
-  var chatSocket = io("http://localhost:3000/123");
+  var chatSocket = io("http://localhost:3000/dynamic-ee7d2083b79a8253306452678886a3ea3d09e1ccf9d4f230c5f32155dbd0e898");
 
   var chatBtn = document.querySelector('.chat-btn');
   var input = document.querySelector('.chat-input');

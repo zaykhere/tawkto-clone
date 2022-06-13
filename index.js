@@ -24,21 +24,33 @@ app.use(cookieParser());
 app.use("/assets", express.static("assets"));
 dotenv.config({ path: "./config.env" });
 
-
-
 mongoose
   .connect(process.env.DB_URL)
   .then(() => console.log("Connected to the database"))
   .catch((err) => console.log(err));
 
+io.of(/^\/dynamic-[a-zA-Z0-9]+$/).on("connection", (socket) => {
+  const namespace = socket.nsp.name;
+  let namespaceToCheck = namespace.split('-');
+  console.log(namespaceToCheck[1])
+  User.findOne({apiKey: namespaceToCheck[1]})
+    .then((doc)=> {
+      if(namespaceToCheck[1] == doc.apiKey) {
+        console.log("Valid Connection");
+        socket.on("chat-message", (msg) => {
+          console.log(msg);
+          io.of(namespace).emit("chat-message", msg);
+        })
+      }
+    })
+    .catch((err)=> {
+      console.log(err);
+    })    
+});
+
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/public/index.html");
 });
-
-User.find().then((doc)=> {
-  console.log(doc);
-})
-
 
 //Import Routes
 const userRoute = require("./routes/userRoutes");
