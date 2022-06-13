@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const User = require("../models/User");
+const Message = require("../models/Message")
 const generateToken = require("../utils/genToken");
 const crypto = require("crypto");
 const fs = require("fs");
@@ -37,6 +38,12 @@ router.post("/register", async (req, res) => {
         ),
       };
       res.cookie("token", generateToken(user._id), options);
+
+      const message = new Message({
+        namespace: `/dynamic-${hash}`
+      })
+      await message.save();
+
       res.render("dashboard", {name: user.name});
     } catch (error) {
       console.log(error);
@@ -62,6 +69,7 @@ router.post("/register", async (req, res) => {
             ),
           };
           res.cookie("token", generateToken(user._id), options);
+          const Message = 
           res.render("dashboard", {name: user.name});
       } else {
         res.status(401).json({ error: "Invalid email or password" });

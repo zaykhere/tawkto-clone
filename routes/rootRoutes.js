@@ -14,4 +14,9 @@ router.get("/dashboard", protect , async(req,res) => {
     res.render("dashboard", {name: req.user.name});
 })
 
+router.get("/chat-dashboard", protect, async(req,res) => {
+    const apiKey = req.user.apiKey;
+    res.render("dashboardchat", {apiKey: apiKey})
+})
+
 module.exports = router;

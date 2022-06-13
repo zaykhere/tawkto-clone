@@ -63,7 +63,7 @@
 	chatBubble.classList.toggle('chat-bubble-hover');
 })  
  // var socket = io("http://localhost:3000");
-  var chatSocket = io("http://localhost:3000/dynamic-ee7d2083b79a8253306452678886a3ea3d09e1ccf9d4f230c5f32155dbd0e898");
+  var chatSocket = io("http://localhost:3000/dynamic-2988f45f0d111ee5cb9dda0567f77c54ab19c505deba1f9cb7703aca71e70554");
 
   var chatBtn = document.querySelector('.chat-btn');
   var input = document.querySelector('.chat-input');
@@ -73,7 +73,7 @@
     if (event.key === "Enter") {
         event.preventDefault();
         if (input.value) {
-      chatSocket.emit('chat-message', input.value);
+      chatSocket.emit('chat-message', `Visitor: ${input.value}`);
       input.value = '';
     }
     }
