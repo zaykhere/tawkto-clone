@@ -26,16 +26,19 @@ app.use(cookieParser());
 app.use("/assets", express.static("assets"));
 dotenv.config({ path: "./config.env" });
 
+//Configure ejs as view engine
 app.set("view engine", "ejs"); 
 
+//Database setup
 mongoose
   .connect(process.env.DB_URL)
   .then(() => console.log("Connected to the database"))
   .catch((err) => console.log(err));
 
+//Server Socket
 io.of(/^\/dynamic-[a-zA-Z0-9]+$/).on("connection", (socket) => {
   const namespace = socket.nsp.name;
-  console.log(namespace);
+//  console.log(namespace);
   let namespaceToCheck = namespace.split('-');
   //console.log(namespaceToCheck[1])
   User.findOne({apiKey: namespaceToCheck[1]})
@@ -61,6 +64,7 @@ io.of(/^\/dynamic-[a-zA-Z0-9]+$/).on("connection", (socket) => {
     })    
 });
 
+//Making io instance available to every other request handler
 app.use(function(req, res, next) {
   req.io = io;
   next();
@@ -74,10 +78,12 @@ app.get("/", (req, res) => {
 //Import Routes
 const userRoute = require("./routes/userRoutes");
 const rootRoute = require("./routes/rootRoutes");
+const messageRoute = require("./routes/messageRoutes");
 
 //Use those routes
 app.use("/api/user", userRoute);
 app.use("/", rootRoute);
+app.use("/messages", messageRoute);
 
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {

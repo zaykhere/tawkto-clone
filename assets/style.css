@@ -1,8 +1,7 @@
 body {
-    display: flex;
+    /* display: flex;
     flex-flow: column wrap;
-    justify-content: flex-start;
-    background: #DDFFE8;
+    justify-content: flex-start; */
   }
   
   .chat-bubble {
@@ -100,6 +99,19 @@ body {
     transition: all 0.7s;
     color: #FFF;
   }
+
+  .email-input {
+      height: 50%;
+      background: skyblue;
+      width: 70%;
+      border-radius: 5px;
+      margin: auto;
+      border: none;
+      padding: 0 0.5em 0 0.5em;
+      transition: all 0.7s;
+      color: #FFF;
+  }
+  
   .chat-box .input-holder .control .chat-input:focus {
     background: #b6ecc9;
     outline: none;

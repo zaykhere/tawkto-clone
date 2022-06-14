@@ -43,6 +43,11 @@
   elem3Control.classList.add("control");
   elem3.appendChild(elem3Control);
 
+  let emailInput = document.createElement("input");
+  emailInput.type = "text";
+  emailInput.placeholder = "Enter your email...."
+  emailInput.classList.add("email-input");
+
   let elem3Input = document.createElement("input");
   elem3Input.type = "text";
   elem3Input.classList.add("chat-input");
@@ -52,6 +57,7 @@
   elem3Button.classList.add('chat-btn');
 
   //Adding input and button to elem3
+  elem3Control.appendChild(emailInput);
   elem3Control.appendChild(elem3Input);
   elem3Control.appendChild(elem3Button);
 
@@ -68,12 +74,13 @@
   var chatBtn = document.querySelector('.chat-btn');
   var input = document.querySelector('.chat-input');
   var messages = document.querySelector(".messages");
+  var emailInputTag = document.querySelector(".email-input");
 
   input.addEventListener("keypress", function(event){
     if (event.key === "Enter") {
         event.preventDefault();
-        if (input.value) {
-      chatSocket.emit('chat-message', `Visitor: ${input.value}`);
+        if (input.value && emailInputTag.value) {
+      chatSocket.emit('chat-message', `${emailInputTag.value}: ${input.value}`);
       input.value = '';
     }
     }
@@ -81,8 +88,8 @@
 
   chatBtn.addEventListener('click', function(e) {
     e.preventDefault();
-    if (input.value) {
-      chatSocket.emit('chat-message', input.value);
+    if (input.value && emailInputTag.value) {
+      chatSocket.emit('chat-message', `${emailInputTag.value}: ${input.value}`);
       input.value = '';
     }
   });
