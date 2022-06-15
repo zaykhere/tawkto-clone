@@ -12,7 +12,6 @@
     <script src="../socket.io/socket.io.js"></script>
     <script>
       let ApiKey = document.getElementById("mydiv").dataset.apikey;
-
       let div = document.createElement("div");
       let elem1 = document.createElement("div");
       elem1.classList.add("chat-bubble");
@@ -56,14 +55,27 @@
         chatBubble.classList.toggle("chat-bubble-hover");
       });
       var chatSocket = io(`http://localhost:3000/dynamic-${ApiKey}`);
+
+      chatSocket.on('connect', function() {
+        console.log("Connected-test-succeeded");
+   // Connected, let's sign-up for to receive messages for this room
+        
+});
+
+chatSocket.on('pass-email', (val)=> {
+          console.log(val);
+          console.log("Listening")
+        })
+     
       var chatBtn = document.querySelector(".chat-btn");
       var input = document.querySelector(".chat-input");
       var messages = document.querySelector(".messages");
-
       input.addEventListener("keypress", function (event) {
         if (event.key === "Enter") {
           event.preventDefault();
           if (input.value) {
+            chatSocket.emit()
+
             chatSocket.emit(
               "chat-message",
               "Owner" + ":" + input.value

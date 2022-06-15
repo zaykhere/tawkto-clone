@@ -37,25 +37,36 @@ mongoose
 
 //Server Socket
 io.of(/^\/dynamic-[a-zA-Z0-9]+$/).on("connection", (socket) => {
+  let email;
   const namespace = socket.nsp.name;
+
 //  console.log(namespace);
   let namespaceToCheck = namespace.split('-');
   //console.log(namespaceToCheck[1])
   User.findOne({apiKey: namespaceToCheck[1]})
     .then((doc)=> {
       if(namespaceToCheck[1] == doc.apiKey) {
+
+        socket.once("pass-email", (data) => {
+          io.of(namespace).emit("pass-email", data);
+          email = data;
+          socket.join(data);
+        })
+        
         console.log("Valid Connection");
+
         socket.on("chat-message", (msg) => {
-          console.log(msg);
+          //console.log(msg);
           
         Message.findOne({namespace: namespace})
           .then((doc) => {
-            console.log(doc);
+           // console.log(doc);
             doc.messages.push(msg);
             doc.save().then((saved) => { return Promise.resolve(saved) });
           })
 
-          io.of(namespace).emit("chat-message", msg);
+          console.log(socket.handshake);
+          io.of(namespace).to(email).emit("chat-message", msg);
         })
       }
     })
